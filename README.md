@@ -1,4 +1,4 @@
-# DEep Survival Analysis(DESA)
+# DEep Survival Analysis (DESA)
 A `tensorflow` implementation of DESA model. This is the experiment code for the KDD'18 submitted paper "Deep Survival Analysis for Fine-grained Bid Landscape Forecasting in Real-time Bidding Advertising". 
 If you have any questions, please feel free to contact [Kan Ren](http://apex.sjtu.edu.cn/members/kren) (kren@apex.sjtu.edu.cn), [Jiarui Qin](http://apex.sjtu.edu.cn/members/qinjr) (qinjr@apex.sjtu.edu.cn) and [Lei Zheng](http://apex.sjtu.edu.cn/members/zhenglei)(zhenglei@apex.sjtu.edu.cn).
 
