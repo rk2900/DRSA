@@ -2,5 +2,8 @@
 	path = /STM_MM
 	url = https://github.com/qinjr/bid-lands
 [submodule "MTLSA"]
-	path = /MTLSA
-	url = https://github.com/qinjr/MTLSA
+	path = MTLSA
+	url = https://github.com/qinjr/MTLSA.git
+[submodule "STM_MM"]
+	path = STM_MM
+	url = https://github.com/qinjr/bid-lands.git
