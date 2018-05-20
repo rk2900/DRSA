@@ -190,7 +190,7 @@ if __name__ == '__main__':
         feat_index = '../data/' + campaign + '/featindex.txt'
 
         # hyper parameters
-        lr_1s = [10, 1]#[10, 1, 0.1, 0.01]
+        lr_1s = [10]#[10, 1, 0.1, 0.01]
         lr_2s = [1e-4]#, 5e-3]#[5e-3, 1e-4]
         l2_loss_weights = [0.0001]
         batch_sizes = [64]#, 128]#[64, 128]
