@@ -18,7 +18,7 @@ After download please replace the sample data in `data/` folder with the full da
 After package installation, you can simple run the code in `python` directory with the demo tiny dataset(sampled from campaign 2259). The outputs of the code are in `python/output' directory.
 
 ```
-python3 gamma.py #for GAMMA
+python3 gamma_model.py #for GAMMA
 python3 coxnn.py [campaign] [learn_rate] [batch_size] [hidden_layer_size] [threshold] [w_k] [w_lambda] #for COX-NN
 python RNN.py 0.0001      # for RNN
 python DNN.py 0.0001      # for DNN
