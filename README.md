@@ -1,5 +1,5 @@
-# DEep Survival Analysis (DESA)
-A `tensorflow` implementation of DESA model. This is the experiment code for the working paper.
+# Deep Recurrent Survival Analysis (DRSA)
+A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper.
 
 Our model is `DESA` model. The baseline models are `COX-NN`, `GAMMA`, `MM`, `STM`, `MTLSA`, `RNN` and `DNN`.
 Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands)(it also has the implementation of `MM`) and [MTLSA](https://github.com/MLSurvival/MTLSA).
