@@ -3,7 +3,7 @@ A `tensorflow` implementation of DRSA model. This is the experiment code for the
 
 Our model is `DRSA` model. The baseline models are `Kaplan-Miere`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
 Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands) and [MTLSA](https://github.com/MLSurvival/MTLSA).
-Of course, we also made some modifications on the two projects to fit them for our experiments, **To get the modified code, you can click MTLSA @ 712e3bc and STM_MM @ 2d57f03 to get them.** Many thanks to the authors of `STM` and `MTLSA`.
+Of course, we also made some modifications on the two projects to fit them for our experiments, **To get the modified code, you can click MTLSA @ ba353f8 and STM @ df57e70 to get them.** Many thanks to the authors of `STM` and `MTLSA`.
 Other baselines' implementations are in `python` directory.
 
 ### Data Preparation
