@@ -9,7 +9,7 @@ import time
 import datetime
 import signal
 import math
-
+TRAING_TIME = 15
 SHUFFLE = True
 LOAD_LITTLE_DATA = False
 
@@ -20,7 +20,7 @@ class SparseData():
             np.random.shuffle(self.index)
         return self.data[self.index], self.seqlen[self.index], self.labels[self.index], self.market_price[self.index]
 
-    def __init__(self, INPUT_FILE, win, all):
+    def __init__(self, INPUT_FILE, win, all, discount):
         self.data = []
         self.labels = []
         self.seqlen = []
@@ -34,7 +34,7 @@ class SparseData():
                 break
             COUNT += 1
             s = line.split(' ')
-            slen = len(s) - 3
+            slen = len(s)
             t_indices = []
             for i in range(3, slen):
                 w = s[i].split(':')
@@ -45,29 +45,33 @@ class SparseData():
             bid_price = int(s[2])
             if all:
                 if bid_price <= market_price:
-                    self.data.append(t_indices)
-                    self.seqlen.append(bid_price)
-                    self.market_price.append(market_price)
-                    self.labels.append([1., 0.])
+                    self.data.append(t_indices)  # data only conclude indices use this to get embedding
+                    self.seqlen.append(bid_price / discount)
+                    self.market_price.append(market_price / discount)
+                    self.labels.append([1., 0.])  # so far we always lose, it means we still survial
                 else:
-                    self.data.append(t_indices)
-                    self.seqlen.append(bid_price)
-                    self.market_price.append(market_price)
-                    self.labels.append([0., 1.])
+                    self.data.append(t_indices)  # data only conclude indices use this to get embedding
+                    self.seqlen.append(bid_price / discount)
+                    self.market_price.append(market_price / discount)
+                    self.labels.append([0., 1.])  # we win means we dead
 
             else:
                 if bid_price <= market_price:
                     if not win:
-                        self.data.append(t_indices)
-                        self.seqlen.append(bid_price)
-                        self.market_price.append(market_price)
-                        self.labels.append([1., 0.])
+                        self.data.append(t_indices)  # data only conclude indices use this to get embedding
+                        #bid_price= 3
+                        #market_price = 2
+                        self.seqlen.append(bid_price / discount)
+                        self.market_price.append(market_price / discount)
+                        self.labels.append([1., 0.])  # so far we always lose, it means we still survial
                 else:
                     if win:
-                        self.data.append(t_indices)
-                        self.seqlen.append(bid_price)
-                        self.market_price.append(market_price)
-                        self.labels.append([0., 1.])
+                        #bid_price = 3
+                        #market_price = 2
+                        self.data.append(t_indices)  # data only conclude indices use this to get embedding
+                        self.seqlen.append(bid_price / discount)
+                        self.market_price.append(market_price / discount)
+                        self.labels.append([0., 1.])  # we win means we dead
 
         self.max_d = max_d
         fi.close()
@@ -95,13 +99,14 @@ class SparseData():
         return np.array(batch_data), np.array(batch_labels), np.array(batch_seqlen), np.array(batch_market_price)
 
 class biSparseData():
-    def __init__(self, INPUT_FILE):
+    def __init__(self, INPUT_FILE, discount):
         random.seed(time.time())
-        self.winData = SparseData(INPUT_FILE, True, False)
-        self.loseData = SparseData(INPUT_FILE, False, True)#todo lose data get all data
+        self.winData = SparseData(INPUT_FILE, True, False, discount)
+        self.loseData = SparseData(INPUT_FILE, False, True, discount)#todo lose data get all data
         self.size = self.winData.size + self.loseData.size
     def next(self, batch):
-        win = int(random.random() * 100) % 11 == 1# todoe 1/10 get windata
+        #win = int(random.random() * 100) % 11 == 1# todoe 1/10 get windata
+	win = int(random.random() * 100) % 11 <= 5
         if win:
             a, b, c, d = self.winData.next(batch)
             return a, b, c, d, True
@@ -140,8 +145,17 @@ class BASE_RNN():
                         TEST_FREQUENT=False,
                         ANLP_LR = 0.001,
                         DNN_MODEL = False,
+                        QRNN_MODEL = False,
                         GLOAL_STEP = 0,
+                        COV_SIZE = 1,
+                        DOUBLE_QRNN = False,
+                        ANLP_ROUND_ROBIN_RATE = 0.2,
+                        DISCOUNT = 1
 ):
+        self.DISCOUNT = DISCOUNT
+        self.DOUBLE_QRNN = DOUBLE_QRNN
+        self.ANLP_ROUND_ROBIN_RATE = ANLP_ROUND_ROBIN_RATE
+        self.QRNN_MODEL = QRNN_MODEL
         self.global_step = GLOAL_STEP
         self.DNN_MODEL = DNN_MODEL
         self.ANLP_LR = ANLP_LR
@@ -157,7 +171,7 @@ class BASE_RNN():
         self.EMB_DIM = EMB_DIM
         self.FEATURE_SIZE = FEATURE_SIZE
         self.MAX_DEN = MAX_DEN
-        self.MAX_SEQ_LEN = MAX_SEQ_LEN
+        self.MAX_SEQ_LEN = MAX_SEQ_LEN / self.DISCOUNT + 10
         self.LR = LR
         self.GRAD_CLIP = GRAD_CLIP
         self.L2_NORM = L2_NORM
@@ -168,6 +182,9 @@ class BASE_RNN():
         self.TRAIN_FILE = "../data/" + INPUT_FILE + "/train.yzbx.txt"
         self.TEST_FILE = "../data/" + INPUT_FILE + "/test.yzbx.txt"
         self.OPEN_TEST = OPEN_TEST
+        self.COV_SIZE = COV_SIZE
+
+  
 
         para = None
         if LOG_FILE_NAME != None:
@@ -180,7 +197,8 @@ class BASE_RNN():
                 "{:.6f}".format(self.L2_NORM) + "_" + \
                 INPUT_FILE + "_" + \
                 "{:.2f}".format(self.ALPHA) + "_" \
-                "{:.2f}".format(self.BETA) + "_" + str(ADD_TIME_FEATURE)
+                "{:.2f}".format(self.BETA) + "_" + str(ADD_TIME_FEATURE) + \
+                   "_" + str(self.QRNN_MODEL) + "_" + str(self.COV_SIZE) + "_" + str(DISCOUNT)
         print para, '\n'
         self.filename = para
         self.train_log_txt_filename = "./" + para + '.train.log.txt'
@@ -207,15 +225,17 @@ class BASE_RNN():
             ret.append(preds)
         return ret
 
+
     def load_data(self):
-        self.train_data = biSparseData(self.TRAIN_FILE)
-        self.test_data_win = SparseData(self.TEST_FILE, True, False)
-        self.test_data_lose = SparseData(self.TEST_FILE, False, False)
+        self.train_data = biSparseData(self.TRAIN_FILE, self.DISCOUNT)
+        self.test_data_win = SparseData(self.TEST_FILE, True, False, self.DISCOUNT)
+        self.test_data_lose = SparseData(self.TEST_FILE, False, False, self.DISCOUNT)
 
     def is_exist(self):
         if self.SAVE_LOG == False:
             return False
         return self.exist
+
 
     def create_graph(self):
         BATCH_SIZE = self.BATCH_SIZE
@@ -251,18 +271,17 @@ class BASE_RNN():
                 outlist.append(sigleout)
             preds = tf.reshape(tf.stack(outlist, axis=0), [self.BATCH_SIZE, self.MAX_SEQ_LEN], name="preds")
         else:
-            input_x = tf.reshape(tf.tile(input, [1, self.MAX_SEQ_LEN]), [BATCH_SIZE, self.MAX_SEQ_LEN, self.FEATURE_SIZE * self.EMB_DIM])
-
+            # input_x = tf.reshape(tf.tile(input, [1, self.MAX_SEQ_LEN]), [BATCH_SIZE, self.MAX_SEQ_LEN, self.FEATURE_SIZE * self.EMB_DIM])
             rnn_cell = None
             rnn_cell = tf.contrib.rnn.BasicLSTMCell(num_units=self.STATE_SIZE)
 
 
             outputs, (h_c, h_n) = tf.nn.dynamic_rnn(
-                rnn_cell,
-                input_x,
-                initial_state=None,
-                dtype=tf.float32,
-                time_major=False,
+                rnn_cell,                   # cell you have chosen
+                input_x,                    # input
+                initial_state=None,         # the initial hidden state
+                dtype=tf.float32,           # must given if set initial_state = None
+                time_major=False,           # False: (batch, time step, input); True: (time step, batch, input)
                 sequence_length=self.tf_rnn_len
             )
 
