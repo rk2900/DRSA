@@ -2,7 +2,7 @@ from BASE_MODEL import BASE_RNN
 import sys
 
 #default parameter
-FEATURE_SIZE = 13 # dataset input fields count
+FEATURE_SIZE = 16 # dataset input fields count
 MAX_DEN = 580000 # max input data demension
 EMB_DIM = 32
 BATCH_SIZE = 128
@@ -39,6 +39,7 @@ RUNNING_MODEL = BASE_RNN(EMB_DIM=EMB_DIM,
                          FIND_PARAMETER=False,
                          ANLP_LR=LR,
                          DNN_MODEL=False,
+                         DISCOUNT=1,
                          ONLY_TRAIN_ANLP=False,
                          LOG_PREFIX="desa")
 RUNNING_MODEL.create_graph()
