@@ -41,6 +41,6 @@ RUNNING_MODEL = BASE_RNN(EMB_DIM=EMB_DIM,
                          DNN_MODEL=False,
                          DISCOUNT=1,
                          ONLY_TRAIN_ANLP=False,
-                         LOG_PREFIX="desa")
+                         LOG_PREFIX="drsa")
 RUNNING_MODEL.create_graph()
 RUNNING_MODEL.run_model()
