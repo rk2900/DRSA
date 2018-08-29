@@ -21,9 +21,8 @@ python3 km.py             # for Kaplan-Miere
 python3 gamma_model.py    # for Gamma
 python3 cox.py            # for Lasso-Cox and DeepSurv
 python3 deephit.py        # for DeepHit
-python RNN.py 0.0001      # for RNN
-python DNN.py 0.0001      # for DNN
-python DESA.py 0.0001     # for DESA
+python DRN.py 0.0001      # for DRN
+python DRSA.py 0.0001     # for DRSA
 ```
 We have set default hyperparameter in the model implementation. So the parameter arguments are optional for running the code.
 
