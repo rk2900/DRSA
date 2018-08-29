@@ -105,7 +105,8 @@ class biSparseData():
         self.loseData = SparseData(INPUT_FILE, False, True, discount)#todo lose data get all data
         self.size = self.winData.size + self.loseData.size
     def next(self, batch):
-        win = int(random.random() * 100) % 11 == 1# todoe 1/10 get windata
+        #win = int(random.random() * 100) % 11 == 1# todoe 1/10 get windata
+	win = int(random.random() * 100) % 11 <= 5
         if win:
             a, b, c, d = self.winData.next(batch)
             return a, b, c, d, True
