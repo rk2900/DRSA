@@ -8,6 +8,7 @@ import random
 import time
 from util import *
 from sklearn.metrics import *
+import sys
 
 class Model:
     def __init__(self, lr_1, lr_2, l2_loss_weight, batch_size, dimension, theta0, util_train, util_test, campaign):
@@ -93,14 +94,7 @@ class Model:
         step = 0
         epoch = 0
         loss_list = []
-
-        x, b, z, y = self.util_train.get_all_data_origin()
-        feed_dict_all = {}
-        feed_dict_all[self.X] = tf.SparseTensorValue(x, [1] * len(x), [self.train_data_amt, dimension])
-        feed_dict_all[self.b] = b
-        feed_dict_all[self.z] = z
-        feed_dict_all[self.y] = y
-        feed_dict_all[self.label_phase2] = self.theta_const * self.ks_const
+        batch_loss = []
 
         print("begin training phase 2")
         while True:
@@ -113,12 +107,13 @@ class Model:
             feed_dict[self.label_phase2] = self.theta_const * ks_batch
 
             self.sess.run(self.train_step2, feed_dict)
+            batch_loss.append(self.sess.run(self.loss_phase2, feed_dict))
             step += 1
 
             if step * self.batch_size - epoch * int(0.02 * self.train_data_amt) >= int(0.02 * self.train_data_amt):
-                loss = self.sess.run(self.loss_phase2, feed_dict_all)
+                loss = np.mean(batch_loss[step - int(int(0.02 * self.train_data_amt) / self.batch_size) - 1:])
                 loss_list.append(loss)
-                print("train loss of phase-2 epoch-{0} is {1}".format(epoch, loss))
+                print("train loss of phase2 epoch-{0} is {1}".format(epoch, loss))
                 epoch += 1
 
             # stop condition
@@ -126,7 +121,7 @@ class Model:
                 continue
             if (loss_list[-1] - loss_list[-2] > 0 and loss_list[-2] - loss_list[-3] > 0):
                 break
-            if epoch * 0.02 * self.train_data_amt >= 10 * self.train_data_amt:
+            if epoch * 0.02 * self.train_data_amt >= 20 * self.train_data_amt:
                 break
 
         # draw SGD training process
@@ -167,12 +162,13 @@ class Model:
         logp = -tf.log(ps)
         logp_arr = self.sess.run(logp, feed_dict)
         logp_arr[np.isnan(logp_arr)] = 1e-20 #for overflow values, minor
+        logp_arr[logp_arr == 0] = 1e-20
 
-        anlp = np.mean(logp_arr[logp_arr > 0])
+        anlp = np.mean(logp_arr)
         print("ANLP: {}".format(anlp))
 
         # save result and params
-        fin = open(self.output_dir + 'result', 'w')
+        fin = open(self.output_dir + 'result.txt', 'w')
         fin.writelines(["MSE: {0}   AUC: {1}    Log Loss: {2}   ANLP: {3}\n".format(mse, auc, logloss, anlp)])
         fin.close()
 
@@ -182,7 +178,9 @@ class Model:
 
 
 if __name__ == '__main__':
-    campaign_list = ['2259']
+    if len(sys.argv) == 2:
+        os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
+    campaign_list = ['2259']#['3386', '3427', '3476', '1458']#['2997', '2259', '2261', '2821']
 
     for campaign in campaign_list:
         train_file = '../data/' + campaign + '/train.yzbx.txt'
@@ -190,10 +188,10 @@ if __name__ == '__main__':
         feat_index = '../data/' + campaign + '/featindex.txt'
 
         # hyper parameters
-        lr_1s = [10]#[10, 1, 0.1, 0.01]
-        lr_2s = [1e-4]#, 5e-3]#[5e-3, 1e-4]
+        lr_1s = [1e-3]
+        lr_2s = [1e-3]
         l2_loss_weights = [0.0001]
-        batch_sizes = [64]#, 128]#[64, 128]
+        batch_sizes = [128]
         dimension = int(open(feat_index).readlines()[-1].split('\t')[1][:-1]) + 1
 
         params = []

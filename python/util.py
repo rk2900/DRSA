@@ -1,13 +1,12 @@
 import random
 import numpy as np
-FEAT_NUM = 16
+# FEAT_NUM = 16
 NORMALIZE_PRICE = 300
 
 class Util:
     def __init__(self, input_file, featindex, batch_size, op):
         self.input_file = input_file
         self.featindex = featindex
-        self.feat_sizes = [0] * FEAT_NUM
         self.batch_size = batch_size
 
         # key = pos, value = (field_num, nth value)
@@ -16,6 +15,8 @@ class Util:
         # generate feat_dict
         fin = open(featindex, 'r')
         lines = fin.readlines()
+        self.feat_sizes = [0] * (int(lines[-1].split(':')[0]) + 1)
+
         for line in lines:
             split1 = line.split('\t')
             split2 = split1[0].split(':')
@@ -41,11 +42,8 @@ class Util:
             items = line.split(' ')
             input_x.append([int(x) for x in items[1:]])
         fin.close()
-        print("original data set size: ", len(input_x))
-        if op == 'train':
-            input_x = input_x#self.sample(input_x)
-        #random.shuffle(input_x)
-        print("data set size after sampling: ", len(input_x))
+        print("data set size: ", len(input_x))
+
 
         self.x = []
         self.b = []
@@ -53,8 +51,8 @@ class Util:
         self.y = []
         for zbx in input_x:
             if (zbx[0] > 0):
-                self.z.append(zbx[0])# / NORMALIZE_PRICE)
-                self.b.append(zbx[1])# / NORMALIZE_PRICE)
+                self.z.append(zbx[0])
+                self.b.append(zbx[1])
                 self.x.append(zbx[2:])
                 if zbx[0] >= zbx[1]:
                     self.y.append(0)
@@ -80,7 +78,7 @@ class Util:
                     field_res[field_nth[0]].append(rec)
                 else:
                     field_res[field_nth[0]] = [rec]
-            for key in range(FEAT_NUM):
+            for key in range(len(self.feat_sizes)):
                 if key in field_res:
                     batch_res.append(field_res[key])
                 else:
@@ -134,6 +132,30 @@ class Util:
         z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :]
         y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :]
         return x_field_batch, b_batch, z_batch, y_batch
+    
+    def get_batch_data_sorted(self, num):
+        if (num % self.batch_num) == 0:
+            print('shuffle')
+            index = [i for i in range(self.data_amt)]
+            shuffled_index = random.shuffle(index)
+            self.b = self.b[shuffled_index].reshape(-1, 1)
+            self.z = self.z[shuffled_index].reshape(-1, 1)
+            self.y = self.y[shuffled_index].reshape(-1, 1)
+            self.x = self.x[shuffled_index].reshape(self.data_amt, len(self.feat_sizes))
+        pos = num % self.batch_num
+        x_batch = self.x[pos * self.batch_size : (pos + 1) * self.batch_size]
+        b_batch = self.b[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+
+        #sort
+        base = (b_batch * (1 - y_batch) + z_batch * y_batch).reshape(-1,)
+        sort_index = np.argsort(base)
+        x_batch_field_sort = self.partition([self.generate_indices(x_batch[sort_index].tolist())])[0]
+        b_batch_sort = b_batch[sort_index]
+        z_batch_sort = z_batch[sort_index]
+        y_batch_sort = y_batch[sort_index]
+        return x_batch_field_sort, b_batch_sort, z_batch_sort, y_batch_sort
 
     def get_batches_data(self, from_, num):
         pos = from_ % self.batch_num
@@ -155,24 +177,66 @@ class Util:
             self.x = self.x[shuffled_index].reshape(self.data_amt, len(self.feat_sizes))
         pos = num % self.batch_num
         x_batch = self.generate_indices(self.x[pos * self.batch_size : (pos + 1) * self.batch_size].tolist())
-        b_batch = self.b[pos * self.batch_size : (pos + 1) * self.batch_size, :]
-        z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :]
-        y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :]
-        ks_batch = ks_const[pos * self.batch_size : (pos + 1) * self.batch_size, :]
-        return x_batch, b_batch.astype(np.float64), z_batch.astype(np.float64), y_batch.astype(np.float64), ks_batch.astype(np.float64)
+        b_batch = self.b[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        ks_batch = ks_const[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        return x_batch, b_batch, z_batch, y_batch, ks_batch
+
+    def get_batch_data_origin(self, num):
+        if (num % self.batch_num) == 0:
+            print('shuffle')
+            index = [i for i in range(self.data_amt)]
+            shuffled_index = random.shuffle(index)
+            self.b = self.b[shuffled_index].reshape(-1, 1)
+            self.z = self.z[shuffled_index].reshape(-1, 1)
+            self.y = self.y[shuffled_index].reshape(-1, 1)
+            self.x = self.x[shuffled_index].reshape(self.data_amt, len(self.feat_sizes))
+        pos = num % self.batch_num
+        x_batch = self.generate_indices(self.x[pos * self.batch_size : (pos + 1) * self.batch_size].tolist())
+        b_batch = self.b[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        return x_batch, b_batch, z_batch, y_batch
+
+    def get_batch_data_origin_sorted(self, num):
+        if (num % self.batch_num) == 0:
+            print('shuffle')
+            index = [i for i in range(self.data_amt)]
+            shuffled_index = random.shuffle(index)
+            self.b = self.b[shuffled_index].reshape(-1, 1)
+            self.z = self.z[shuffled_index].reshape(-1, 1)
+            self.y = self.y[shuffled_index].reshape(-1, 1)
+            self.x = self.x[shuffled_index].reshape(self.data_amt, len(self.feat_sizes))
+        pos = num % self.batch_num
+        x_batch = self.x[pos * self.batch_size : (pos + 1) * self.batch_size]
+        b_batch = self.b[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        z_batch = self.z[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+        y_batch = self.y[pos * self.batch_size : (pos + 1) * self.batch_size, :].astype(np.float64)
+
+        #sort
+        base = (b_batch * (1 - y_batch) + z_batch * y_batch).reshape(-1,)
+        sort_index = np.argsort(base)
+        x_batch_sort = self.generate_indices(x_batch[sort_index].tolist())
+        b_batch_sort = b_batch[sort_index]
+        z_batch_sort = z_batch[sort_index]
+        y_batch_sort = y_batch[sort_index]
+        return x_batch_sort, b_batch_sort, z_batch_sort, y_batch_sort
 
     def get_all_data_origin(self):
         return self.generate_indices(self.x.tolist()), self.b.astype(np.float64), self.z.astype(np.float64), self.y.astype(np.float64)
-
+    
+    def get_all_data_origin_sort(self):
+        base = (self.b * (1 - self.y) + self.z * self.y).reshape(-1,)
+        sort_index = np.argsort(base)
+        x_sort = self.generate_indices(self.x[sort_index].tolist())
+        b_sort = self.b[sort_index].astype(np.float64)
+        z_sort = self.z[sort_index].astype(np.float64)
+        y_sort = self.y[sort_index].astype(np.float64)
+        return x_sort, b_sort, z_sort, y_sort
 
     def get_max_z(self):
         return np.max(self.y * self.z).astype(np.float64)
 
     def get_data_amt(self):
         return self.data_amt
-
-
-if __name__ == '__main__':
-    util = Util('../data/2997/train.yzbx.mini.txt', '../data/2997/featindex.txt', 500, 'train')
-    res = np.array(util.x_batches_field[0][8])
-    print(res)
