@@ -1,9 +1,9 @@
 # Deep Recurrent Survival Analysis (DRSA)
 A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper.
 
-Our model is `DESA` model. The baseline models are `COX-NN`, `GAMMA`, `MM`, `STM`, `MTLSA`, `RNN` and `DNN`.
-Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands)(it also has the implementation of `MM`) and [MTLSA](https://github.com/MLSurvival/MTLSA).
-Of course, we also made some midifications on the two projects to fit them for our experiments, **To get the modified code, you can click MTLSA @ 712e3bc and STM_MM @ 2d57f03 to get them.** Many thanks to the authors of `STM/MM` and `MTLSA`.
+Our model is `DRSA` model. The baseline models are `Kaplan-Miere`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
+Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands) and [MTLSA](https://github.com/MLSurvival/MTLSA).
+Of course, we also made some modifications on the two projects to fit them for our experiments, **To get the modified code, you can click MTLSA @ 712e3bc and STM_MM @ 2d57f03 to get them.** Many thanks to the authors of `STM` and `MTLSA`.
 Other baselines' implementations are in `python` directory.
 
 ### Data Preparation
@@ -14,11 +14,12 @@ After download please replace the sample data in `data/` folder with the full da
 ### Installation and Running
 [TensorFlow](https://www.tensorflow.org/)(>=1.3) and dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code.
 
-After package installation, you can simple run the code in `python` directory with the demo tiny dataset(sampled from campaign 2259). The outputs of the code are in `python/output' directory.
+After package installation, you can simple run the code in `python` directory with the demo tiny dataset(sampled from BIDDING dataset's campaign 2259). The outputs of the code are in `python/output' directory.
 
 ```
-python3 gamma_model.py #for GAMMA
-python3 coxnn.py [campaign] [learn_rate] [batch_size] [hidden_layer_size] [threshold] [w_k] [w_lambda] #for COX-NN
+python3 gamma_model.py    # for Gamma
+python3 cox.py            # for Lasso-Cox and DeepSurv
+python3 deephit.py        # for DeepHit
 python RNN.py 0.0001      # for RNN
 python DNN.py 0.0001      # for DNN
 python DESA.py 0.0001     # for DESA
