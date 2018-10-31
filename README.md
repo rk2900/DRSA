@@ -1,5 +1,5 @@
 # Deep Recurrent Survival Analysis (DRSA)
-A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper.
+A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper (https://arxiv.org/abs/1809.02403).
 
 Our model is `DRSA` model. The baseline models are `Kaplan-Meire`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
 Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands) and [MTLSA](https://github.com/MLSurvival/MTLSA).
