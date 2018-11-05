@@ -17,7 +17,7 @@ After download please replace the sample data in `data/` folder with the full da
 After package installation, you can simple run the code in `python` directory with the demo tiny dataset(sampled from BIDDING dataset's campaign 2259). The outputs of the code are in `python/output' directory.
 
 ```
-python3 km.py             # for Kaplan-Miere
+python3 km.py             # for Kaplan-Meire
 python3 gamma_model.py    # for Gamma
 python3 cox.py            # for Lasso-Cox and DeepSurv
 python3 deephit.py        # for DeepHit
