@@ -8,7 +8,7 @@ Other baselines' implementations are in `python` directory.
 
 ### Data Preparation
 We have uploaded a tiny data sample for training and evaluation.
-The full dataset for this project will be published soon.
+The full dataset for this project can be downloaded in this link: https://goo.gl/nUFND4.
 After download please replace the sample data in `data/` folder with the full data files.
 
 ### Installation and Running
