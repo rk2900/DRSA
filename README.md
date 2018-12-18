@@ -1,6 +1,6 @@
 # Deep Recurrent Survival Analysis (DRSA)
 A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper (https://arxiv.org/abs/1809.02403).
-If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren) and [Jiarui Qin](qinjr@icloud.com).
+If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren) and [Jiarui Qin](mailto:qinjr@icloud.com).
 
 ### Model Description
 Our model is `DRSA` model. The baseline models are `Kaplan-Meier`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
