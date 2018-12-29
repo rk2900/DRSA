@@ -1,6 +1,6 @@
 # Deep Recurrent Survival Analysis (DRSA)
 A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper (https://arxiv.org/abs/1809.02403).
-If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren) and [Jiarui Qin](mailto:qinjr@icloud.com).
+If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren), [Jiarui Qin](mailto:qinjr@icloud.com) and [Lei Zheng](mailto:zhenglei2016@sjtu.edu.cn).
 
 ### Model Description
 Our model is `DRSA` model. The baseline models are `Kaplan-Meier`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
@@ -15,6 +15,12 @@ The **full dataset** for this project can be downloaded at this link: https://go
 This dataset contains three large-scale datasets in three real-world tasks, which is the first dataset with such scale for experiment reproduction in survival analysis.
 
 After download please replace the sample data in `data/` folder with the full data files.
+
+#### Data specification
+Each line is a sample containing the "`yztx`" data, the information is splitted by `SPACE`.
+Here `z` is the true event time, `t` is the observation time and `x` is the list of features (multi-hot encoded as `feat_id:1`).
+In the experiment, we only use `ztx` data.
+Note that, for the uncensored data, `z <= t`, while for the censored data, `z > t`.
 
 ### Installation and Reproduction
 [TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code.
