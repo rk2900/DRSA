@@ -16,6 +16,10 @@ This dataset contains three large-scale datasets in three real-world tasks, whic
 
 After download please replace the sample data in `data/` folder with the full data files.
 
+| Dataset  | MD5 Code  | Size |
+| ------------ | ------------ | --- |
+| drsa.**zip** | b63c53559f58e6afa62c121b0dd1997d  | 2.6 GB |
+
 #### Data specification
 Each line is a sample containing the "`yztx`" data, the information is splitted by `SPACE`.
 Here `z` is the true event time, `t` is the observation time and `x` is the list of features (multi-hot encoded as `feat_id:1`).
