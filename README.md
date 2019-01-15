@@ -5,7 +5,7 @@ If you have any problems, please feel free to contact the authors [Kan Ren](http
 ### Model Description
 Our model is `DRSA` model. The baseline models are `Kaplan-Meier`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
 Among the baseline implementations, we forked the code of [STM](https://github.com/zeromike/bid-lands) and [MTLSA](https://github.com/MLSurvival/MTLSA).
-We made some minor modifications on the two projects to fit them for our experiments, **To get the modified code, you can click MTLSA @ ba353f8 and STM @ df57e70.** Many thanks to the authors of `STM` and `MTLSA`.
+We made some minor modifications on the two projects to fit in our experiments. To get the modified code, you may click MTLSA @ ba353f8 and STM @ df57e70. Many thanks to the authors of `STM` and `MTLSA`.
 Other baselines' implementations are in `python` directory.
 
 ### Data Preparation
@@ -21,7 +21,15 @@ After download please replace the sample data in `data/` folder with the full da
 | drsa.**zip** | b63c53559f58e6afa62c121b0dd1997d  | 2.6 GB |
 
 #### Data specification
-Each line is a sample containing the "`yztx`" data, the information is splitted by `SPACE`.
+We have three datasets and each of them contains `.yzbx.txt`, `featureindex.txt` and `.log.txt`.
+We created the first data file `.log.txt` from the raw data of the original data source (please refer to our paper).
+Then we made feature engineering according to the created feature dictionary `featindex.txt`.
+The corresponding feature engineered data are in `.yzbx.txt`.
+
+If you need to reproduce the experiemtns, you may run over `.yzbx.txt`.
+If you want to dive deep and explain the observations of experiments, you would need to look into the the other files like `.log.txt` and `featindex.txt`. 
+
+In `yzbx.txt` file, each line is a sample containing the "`yztx`" data (here we use `t` and `b` exchangably), the information is splitted by `SPACE`.
 Here `z` is the true event time, `t` is the observation time and `x` is the list of features (multi-hot encoded as `feat_id:1`).
 In the experiment, we only use `ztx` data.
 Note that, for the uncensored data, `z <= t`, while for the censored data, `z > t`.
