@@ -11,7 +11,7 @@ Other baselines' implementations are in `python` directory.
 ### Data Preparation
 We have uploaded a tiny data sample for training and evaluation.
 
-The **full dataset** for this project can be downloaded at this link: https://goo.gl/nUFND4.
+The **full dataset** for this project can be directly downloaded from this link: https://goo.gl/nUFND4.
 This dataset contains three large-scale datasets in three real-world tasks, which is the first dataset with such scale for experiment reproduction in survival analysis.
 
 After download please replace the sample data in `data/` folder with the full data files.
@@ -37,9 +37,9 @@ Note that, for the uncensored data, `z <= t`, while for the censored data, `z > 
 We conduct a simulation of observation experiments which ranges from the whole timeline of each dataset. Then the end of each observation (in right-censored situation) is tracked as `t` in the final data `yztx` along with the true event time `z`.
 The true event time `z` is originally logged in the raw data file.
 The raw data file (without any feature engineering) is from the other related works as described in the exp. part of our paper. We put the download links as below:
-clinic: http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets  (support2csv.zip)
-music: https://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-1K.html
-bidding: https://github.com/wnzhang/make-ipinyou-data
+* clinic: http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets  (support2csv.zip)
+* music: https://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-1K.html
+* bidding: https://github.com/wnzhang/make-ipinyou-data
 
 ### Installation and Reproduction
 [TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code.
