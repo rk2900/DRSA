@@ -42,7 +42,7 @@ The raw data file (without any feature engineering) is from the other related wo
 * bidding: https://github.com/wnzhang/make-ipinyou-data
 
 ### Installation and Reproduction
-[TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code.
+[TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code. The Python version we used is 2.7.6.
 
 After package installation, you can simply run the code in `python` directory with the demo tiny dataset(sampled from BIDDING dataset). The outputs of the code are in `python/output` directory.
 
