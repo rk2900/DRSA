@@ -1,6 +1,10 @@
 # Deep Recurrent Survival Analysis (DRSA)
-A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper (https://arxiv.org/abs/1809.02403).
+A `tensorflow` implementation of DRSA model. This is the experiment code for our AAAI 2019 paper "[Deep Recurrent Survival Analysis](https://arxiv.org/abs/1809.02403)".
+
 If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren), [Jiarui Qin](mailto:qinjr@icloud.com) and [Lei Zheng](mailto:zhenglei2016@sjtu.edu.cn).
+
+### Abstract
+> Survival analysis is a hotspot in statistical research for modeling time-to-event information with data censorship handling, which has been widely used in many applications such as clinical research, information system and other fields with survivorship bias. Many works have been proposed for survival analysis ranging from traditional statistic methods to machine learning models. However, the existing methodologies either utilize counting-based statistics on the segmented data, or have a pre-assumption on the event probability distribution w.r.t. time. Moreover, few works consider sequential patterns within the feature space. In this paper, we propose a Deep Recurrent Survival Analysis model which combines deep learning for conditional probability prediction at fine-grained level of the data, and survival analysis for tackling the censorship. By capturing the time dependency through modeling the conditional probability of the event for each sample, our method predicts the likelihood of the true event occurrence and estimates the survival rate over time, i.e., the probability of the non-occurrence of the event, for the censored data. Meanwhile, without assuming any specific form of the event probability distribution, our model shows great advantages over the previous works on fitting various sophisticated data distributions. In the experiments on the three real-world tasks from different fields, our model significantly outperforms the state-of-the-art solutions under various metrics.
 
 ### Model Description
 Our model is `DRSA` model. The baseline models are `Kaplan-Meier`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
