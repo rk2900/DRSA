@@ -43,7 +43,7 @@ The true event time `z` is originally logged in the raw data file.
 The raw data file (without any feature engineering) is from the other related works as described in the exp. part of our paper. We put the download links as below:
 * clinic: http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets  (supposed to be support2csv.zip, but the raw CLINIC dataset is somehow different, so we have uploaded the raw dataset in this repository.)
 * music: https://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-1K.html
-* bidding: https://github.com/wnzhang/make-ipinyou-data
+* bidding: https://github.com/rk2900/make-ipinyou-data
 
 ### Installation and Reproduction
 [TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code. The Python version we used is 2.7.6.
