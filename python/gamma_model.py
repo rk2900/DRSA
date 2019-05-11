@@ -51,15 +51,15 @@ class Model:
              / tf.exp(tf.lgamma(self.ks)) / tf.pow(self.theta, self.ks)
         self.cs = tf.igamma(self.ks, self.b / self.theta) / tf.exp(tf.lgamma(self.ks))
 
-        self.loss_win = tf.log(self.ps)
-        self.loss_lose = tf.log(1 - self.cs)
+        self.loss_win = tf.log(tf.clip_by_value(self.ps, 1e-8, 1.0))
+        self.loss_lose = tf.log(tf.clip_by_value(1 - self.cs, 1e-8, 1.0))
         self.loss_phase1 = -tf.reduce_mean(self.y * self.loss_win + (1 - self.y) * self.loss_lose)
         self.optimizer1 = tf.train.GradientDescentOptimizer(self.lr_1)
         self.train_step1 = self.optimizer1.minimize(self.loss_phase1)
 
         # phase 2
         self.label_phase2 = tf.placeholder(tf.float64)
-        self.log_label_phase2 = tf.log(self.label_phase2)
+        self.log_label_phase2 = tf.log(tf.clip_by_value(self.label_phase2, 1e-8, 1.0))
         self.loss_phase2 = tf.reduce_mean(tf.square(tf.sparse_tensor_dense_matmul(self.X, self.w) - self.log_label_phase2)) \
                            + self.l2_loss_weight * tf.nn.l2_loss(self.w)
         self.optimizer2 = tf.train.MomentumOptimizer(self.lr_2, 0.9)
@@ -159,7 +159,7 @@ class Model:
         print("Log Loss: {}".format(logloss))
 
         # calculate ANLP
-        logp = -tf.log(ps)
+        logp = -tf.log(tf.clip_by_value(ps, 1e-8, 1.0))
         logp_arr = self.sess.run(logp, feed_dict)
         logp_arr[np.isnan(logp_arr)] = 1e-20 #for overflow values, minor
         logp_arr[logp_arr == 0] = 1e-20

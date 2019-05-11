@@ -84,8 +84,8 @@ class DeepHit:
         self.wz = tf.gather_nd(self.w, idx_z)
 
         # loss and train step
-        self.loss1 = -tf.reduce_sum(tf.log(self.pz) * self.y)
-        self.loss2 = -tf.reduce_sum(tf.log(1 - self.wb) * (1 - self.y))
+        self.loss1 = -tf.reduce_sum(tf.log(tf.clip_by_value(self.pz, 1e-8, 1.0)) * self.y)
+        self.loss2 = -tf.reduce_sum(tf.log(tf.clip_by_value(1 - self.wb, 1e-8, 1.0)) * (1 - self.y))
         self.reg_loss = tf.nn.l2_loss(self.hidden1[1:,]) + tf.nn.l2_loss(self.hidden2[1:,]) + \
                         tf.nn.l2_loss(self.out1[1:,]) + tf.nn.l2_loss(self.out2[1:,])
 
