@@ -1,6 +1,10 @@
 # Deep Recurrent Survival Analysis (DRSA)
-A `tensorflow` implementation of DRSA model. This is the experiment code for the working paper (https://arxiv.org/abs/1809.02403).
+A `tensorflow` implementation of DRSA model. This is the experiment code for our AAAI 2019 paper "[Deep Recurrent Survival Analysis](https://arxiv.org/abs/1809.02403)".
+
 If you have any problems, please feel free to contact the authors [Kan Ren](http://saying.ren), [Jiarui Qin](mailto:qinjr@icloud.com) and [Lei Zheng](mailto:zhenglei2016@sjtu.edu.cn).
+
+### Abstract
+> Survival analysis is a hotspot in statistical research for modeling time-to-event information with data censorship handling, which has been widely used in many applications such as clinical research, information system and other fields with survivorship bias. Many works have been proposed for survival analysis ranging from traditional statistic methods to machine learning models. However, the existing methodologies either utilize counting-based statistics on the segmented data, or have a pre-assumption on the event probability distribution w.r.t. time. Moreover, few works consider sequential patterns within the feature space. In this paper, we propose a Deep Recurrent Survival Analysis model which combines deep learning for conditional probability prediction at fine-grained level of the data, and survival analysis for tackling the censorship. By capturing the time dependency through modeling the conditional probability of the event for each sample, our method predicts the likelihood of the true event occurrence and estimates the survival rate over time, i.e., the probability of the non-occurrence of the event, for the censored data. Meanwhile, without assuming any specific form of the event probability distribution, our model shows great advantages over the previous works on fitting various sophisticated data distributions. In the experiments on the three real-world tasks from different fields, our model significantly outperforms the state-of-the-art solutions under various metrics.
 
 ### Model Description
 Our model is `DRSA` model. The baseline models are `Kaplan-Meier`, `Lasso-Cox`, `Gamma`, `MTLSA`, `STM`, `DeepSurv`, `DeepHit`, `DRN`, and `DRSA`.
@@ -37,12 +41,12 @@ Note that, for the uncensored data, `z <= t`, while for the censored data, `z > 
 We conduct a simulation of observation experiments which ranges from the whole timeline of each dataset. Then the end of each observation (in right-censored situation) is tracked as `t` in the final data `yztx` along with the true event time `z`.
 The true event time `z` is originally logged in the raw data file.
 The raw data file (without any feature engineering) is from the other related works as described in the exp. part of our paper. We put the download links as below:
-* clinic: http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets  (support2csv.zip)
+* clinic: http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets  (supposed to be support2csv.zip, but the raw CLINIC dataset is somehow different, so we have uploaded the raw dataset in this repository.)
 * music: https://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-1K.html
-* bidding: https://github.com/wnzhang/make-ipinyou-data
+* bidding: https://github.com/rk2900/make-ipinyou-data
 
 ### Installation and Reproduction
-[TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code.
+[TensorFlow](https://www.tensorflow.org/)(>=1.3) and the other dependant packages (e.g., `numpy`, `sklearn` and `matplotlib`) should be pre-installed before running the code. The Python version we used is 2.7.6.
 
 After package installation, you can simply run the code in `python` directory with the demo tiny dataset(sampled from BIDDING dataset). The outputs of the code are in `python/output` directory.
 
