@@ -62,7 +62,7 @@ python DRSA.py 0.0001     # for DRSA
 We have set default hyperparameters in the model implementation. So the parameter arguments are optional for running the code.
 
 The results will be printed on the screen with the format:
-Subset, Train/Test,  Step,  Cross Entropy, AUC, ANLP, Total Loss, batch size, hidden state size, learing rate, anlp learning rate, alpha, beta.
+Subset, Train/Test,  Step,  Cross Entropy, AUC(C-index), ANLP, Total Loss, batch size, hidden state size, learing rate, anlp learning rate, alpha, beta.
 
 ### Citation
 You are more than welcome to cite our paper:
