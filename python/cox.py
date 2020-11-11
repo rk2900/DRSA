@@ -53,7 +53,7 @@ class COX:
             self.reg = tf.reduce_sum(tf.abs(self.w[1:,]))
         
         self.multiple_times = tf.exp(self.index)
-        self.loss = -tf.reduce_sum((self.index - tf.log(tf.clip_by_value(tf.cumsum(self.multiple_times, reverse=True), 1e-8, 1.0))) * self.y) + \
+        self.loss = -tf.reduce_sum((self.index - tf.log(tf.clip_by_value(tf.cumsum(self.multiple_times, reverse=True), 1e-6, 1.0))) * self.y) + \
                     self.reg
         self.optimizer = tf.train.GradientDescentOptimizer(self.lr)
         self.train_step = self.optimizer.minimize(self.loss)
