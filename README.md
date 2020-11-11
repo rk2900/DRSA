@@ -16,6 +16,7 @@ Other baselines' implementations are in `python` directory.
 We have uploaded a tiny data sample for training and evaluation.
 
 The **full dataset** for this project can be directly downloaded from this link: https://goo.gl/nUFND4.
+(I've uploaded the full dataset with three split compressed ZIP files with Git LFS in this repo.)
 This dataset contains three large-scale datasets in three real-world tasks, which is the first dataset with such scale for experiment reproduction in survival analysis.
 
 After download please replace the sample data in `data/` folder with the full data files.
