@@ -67,10 +67,13 @@ Subset, Train/Test,  Step,  Cross Entropy, AUC(C-index), ANLP, Total Loss, batch
 ### Citation
 You are more than welcome to cite our paper:
 ```
-@article{ren2019deep,
-  title={Deep Recurrent Survival Analysis},
+@inproceedings{ren2019deep,
+  title={Deep recurrent survival analysis},
   author={Ren, Kan and Qin, Jiarui and Zheng, Lei and Yang, Zhengyu and Zhang, Weinan and Qiu, Lin and Yu, Yong},
-  year={2019},
-  organization={AAAI}
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={33},
+  number={01},
+  pages={4798--4805},
+  year={2019}
 }
 ```
